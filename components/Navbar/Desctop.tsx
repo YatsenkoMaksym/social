@@ -21,7 +21,7 @@ async function Desctop() {
         <div className='hidden md:block'>
           <SignedOut>
             <SignInButton mode='modal'>
-              <Button className='m-3'>Sign up</Button>
+              <Button className='m-3'>Sign in</Button>
             </SignInButton>
           </SignedOut>
         </div>
