@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { auth, User } from '@clerk/nextjs/server';
+import { revalidatePath } from 'next/cache';
 
 export default async function syncClerkWithDB(user: User) {
   try {
@@ -52,7 +53,7 @@ export async function userFromClerk(clerkId: string) {
 
 export async function getUserIdFromDB() {
   const { userId: clerkId } = await auth();
-  if (!clerkId) throw new Error('Unauthorized');
+  if (!clerkId) return null;
   const user = await prisma.user.findUnique({
     where: {
       clerkId,
@@ -64,4 +65,95 @@ export async function getUserIdFromDB() {
 
   if (!user) throw new Error('User was not found');
   return user.id;
+}
+
+export async function getRandomUsers(amount: number) {
+  try {
+    const userId = await getUserIdFromDB();
+    if (!userId) return [];
+    const users = await prisma.user.findMany({
+      where: {
+        AND: [
+          { NOT: { id: userId } },
+          {
+            NOT: {
+              followers: {
+                some: {
+                  followerId: userId,
+                },
+              },
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+        name: true,
+        username: true,
+        image: true,
+        _count: {
+          select: {
+            followers: true,
+          },
+        },
+      },
+      take: amount,
+    });
+    return users;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log('ERROR IN CREATE POST:', error.stack);
+    }
+    return [];
+  }
+}
+
+export async function toggleFollow(personToFollow: string) {
+  try {
+    const userId = await getUserIdFromDB();
+    if (!userId) return null;
+    if (userId === personToFollow) throw new Error("Can't follow yourself");
+
+    const existingFollow = await prisma.follows.findUnique({
+      where: {
+        followerId_followingId: {
+          followerId: userId,
+          followingId: personToFollow,
+        },
+      },
+    });
+    if (existingFollow) {
+      await prisma.follows.delete({
+        where: {
+          followerId_followingId: {
+            followerId: userId,
+            followingId: personToFollow,
+          },
+        },
+      });
+    } else {
+      await prisma.$transaction([
+        prisma.follows.create({
+          data: {
+            followerId: userId,
+            followingId: personToFollow,
+          },
+        }),
+        prisma.notification.create({
+          data: {
+            type: 'FOLLOW',
+            userId: personToFollow,
+            creatorId: userId,
+          },
+        }),
+      ]);
+    }
+    revalidatePath('/');
+    return { success: true };
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log('ERROR IN FOLLOWING/UNFOLLOWING:' + error.stack);
+    }
+    return { success: false };
+  }
 }

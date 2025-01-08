@@ -11,7 +11,7 @@ export async function createPost({
   imageUrl: string;
 }) {
   const user = await currentUser();
-  if (!user) throw new Error('Unauthorized');
+  if (!user) return null;
 
   const dbUser = await prisma.user.findUnique({
     where: {
@@ -27,6 +27,5 @@ export async function createPost({
       image: imageUrl,
     },
   });
-
   return post;
 }

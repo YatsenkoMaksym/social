@@ -19,6 +19,7 @@ export const metadata: Metadata = {
 import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '@/components/Theme-Provider';
 import Navbar from '@/components/Navbar/Navbar';
+import { Toaster } from '@/components/ui/toaster';
 
 export default function RootLayout({
   children,
@@ -40,6 +41,7 @@ export default function RootLayout({
           >
             <Navbar />
             {children}
+            <Toaster />
           </ThemeProvider>
         </body>
       </html>
