@@ -39,15 +39,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Navbar />
-            <main className='py-8 max-w-7xl mx-auto grid grid-cols-3 gap-4 '>
-              <section className='bg-emerald-500'>
-                This is like the left part of the layout
-              </section>
-              <section className='bg-violet-600'>{children}</section>
-              <section className='bg-rose-500'>
-                This is like the right part of the layout lorem5000
-              </section>
-            </main>
+            {children}
           </ThemeProvider>
         </body>
       </html>
