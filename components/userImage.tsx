@@ -1,17 +1,18 @@
+import { cn } from '@/lib/utils';
 import Image from 'next/image';
 interface UserImageProps {
-  imageUrl: string;
-  width?: number;
-  heigth?: number;
+  className?: string;
+  imageUrl?: string | null;
+  alt?: string;
 }
-function UserImage({ imageUrl, heigth, width }: UserImageProps) {
+function UserImage({ imageUrl, alt, className }: UserImageProps) {
   return (
     <Image
-      alt=''
-      width={width || 80}
-      height={heigth || 80}
-      className='rounded-full w-12 h-12'
-      src={imageUrl}
+      alt={alt ? `${alt}'s profile image` : ''}
+      width={80}
+      height={80}
+      className={cn(className, 'rounded-full w-12 h-12')}
+      src={imageUrl ?? '/avatar.png'}
     />
   );
 }

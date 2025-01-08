@@ -1,9 +1,9 @@
-/* eslint-disable @next/next/no-img-element */
 import { currentUser } from '@clerk/nextjs/server';
 import { userFromClerk } from '@/actions/user';
 import SidebarNotAuthed from './SidebarNotAuthed';
 import Link from 'next/link';
 import { LinkIcon, MapPin } from 'lucide-react';
+import UserImage from '../userImage';
 
 async function Sidebar() {
   const user = await currentUser();
@@ -15,12 +15,10 @@ async function Sidebar() {
   return (
     <section className='line-clamp-1 border-foreground border rounded-2xl flex flex-col justify-center items-center gap-3 p-3 py-5'>
       <div className='flex flex-col gap-2 justify-center items-center'>
-        <img
-          width={80}
-          height={80}
-          className='rounded-full'
-          src={dbUser.image || '/avatar.png'}
-          alt={`${dbUser.username}'s profile image`}
+        <UserImage
+          className='!w-20 !h-20'
+          imageUrl={dbUser.image}
+          alt={dbUser.username}
         />
         <h2 className='text-2xl font-semibold text-center '>
           <Link
