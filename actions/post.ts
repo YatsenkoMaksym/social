@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { currentUser } from '@clerk/nextjs/server';
+import { revalidatePath } from 'next/cache';
 
 export async function createPost({
   content,
@@ -9,7 +10,7 @@ export async function createPost({
 }: {
   content: string;
   imageUrl: string;
-}) {
+}): Promise<ReturnType<typeof prisma.post.create> | null> {
   const user = await currentUser();
   if (!user) return null;
 
@@ -27,5 +28,21 @@ export async function createPost({
       image: imageUrl,
     },
   });
+  revalidatePath('/');
   return post;
+}
+
+export async function deletePost(postId: string) {
+  try {
+    await prisma.post.delete({
+      where: {
+        id: postId,
+      },
+    });
+    revalidatePath('/');
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log('ERROR IN DELETING POST:' + error.stack);
+    }
+  }
 }

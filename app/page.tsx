@@ -1,5 +1,5 @@
 import Sidebar from '@/components/Sidebar/Sidebar';
-import Main from '@/components/CreatePost/Main';
+import Main from '@/components/Main/Main';
 import WhoToFollow from '@/components/WhoToFollow/WhoToFollow';
 export default function Home() {
   return (

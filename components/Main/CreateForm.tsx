@@ -42,7 +42,7 @@ function CreateForm() {
           }}
           disabled={isPosting}
           name='content'
-          className='w-full p-5 rounded-2xl max-h-[300px] h-[200px] bg-primary'
+          className='min-h-[4rem] w-full text-foreground p-5 rounded-2xl max-h-[300px] h-[200px] bg-primary-foreground'
         />
       </div>
 
