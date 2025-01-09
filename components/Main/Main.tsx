@@ -1,18 +1,13 @@
 import CreateForm from '@/components/Main/CreateForm';
-import { prisma } from '@/lib/prisma';
 import { currentUser } from '@clerk/nextjs/server';
 import Post from '../Post';
 import { userFromClerk } from '@/actions/user';
+import { getPosts } from '@/actions/post';
 
 export default async function Main() {
   const user = await currentUser();
   const dbUser = user ? await userFromClerk(user.id) : null;
-  const posts = await prisma.post.findMany({
-    take: 6,
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+  const posts = await getPosts();
   return (
     <main className='w-full'>
       {user && <CreateForm />}
