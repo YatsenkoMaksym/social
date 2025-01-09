@@ -45,12 +45,21 @@ function Post({ post, dbUser }: PostProps) {
     <li className='border-foreground border rounded-2xl p-3 py-5 w-full '>
       <div className='flex gap-4 px-5 items-center'>
         <UserImage imageUrl={dbUser.image} />
-        <Link href={`profile/${dbUser.username}`}>
-          {dbUser.username ? dbUser.username : dbUser.name}
-        </Link>
-        <Link href={`profile/${dbUser.username}`}>@{dbUser.username}</Link>
-        <Dot />
-        Post creation time
+        <span className='flex flex-col xl:flex-row xl:gap-5'>
+          <Link href={`profile/${dbUser.username}`}>
+            {dbUser.username ? dbUser.username : dbUser.name}
+          </Link>
+          <Link
+            className='xl:text-foreground dark:text-stone-400 text-stone-800 text-sm xl:text-lg'
+            href={`profile/${dbUser.username}`}
+          >
+            @{dbUser.username}
+          </Link>
+        </span>
+        <p className='xl:flex hidden'>
+          <Dot />
+          Post creation time
+        </p>
         <span className='ml-auto'>
           <DeleteButton postId={id} />
         </span>

@@ -2,7 +2,7 @@ import { getRandomUsers } from '@/actions/user';
 import Link from 'next/link';
 import React from 'react';
 import UserImage from '../userImage';
-import FollowButton from '../FollowButton';
+import FollowButton from '../Buttons/FollowButton';
 
 async function WhoToFollow() {
   const users = await getRandomUsers(5);
@@ -12,7 +12,7 @@ async function WhoToFollow() {
       {users.map((user) => (
         <div
           key={user.id}
-          className='flex justify-between w-full items-center p-2'
+          className='flex justify-center xl:justify-between w-full items-center lg:p-2'
         >
           <span className='flex gap-3 items-center'>
             <UserImage imageUrl={user.image} alt={user.username} />
@@ -28,7 +28,7 @@ async function WhoToFollow() {
               </p>
             </span>
           </span>
-          <FollowButton userId={user.id} />
+          <FollowButton className='hidden xl:block' userId={user.id} />
         </div>
       ))}
     </section>
