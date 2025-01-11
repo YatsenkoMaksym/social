@@ -1,12 +1,12 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
-import { getUserIdFromDB } from './user';
+import { getUserId } from './user';
 import { revalidatePath } from 'next/cache';
 
 export async function toggleLike(postId: string) {
   try {
-    const userId = await getUserIdFromDB();
+    const userId = await getUserId();
     if (!userId)
       throw new Error('Something went wrong, please contact support');
     const existingLike = await prisma.like.findUnique({

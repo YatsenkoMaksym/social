@@ -2,7 +2,7 @@
 
 import { Heart } from 'lucide-react';
 import { Button } from '../ui/button';
-import { toggleLike } from '@/actions/likes';
+import { toggleLike } from '@/actions/like';
 import { useState } from 'react';
 interface LikeButtonProps {
   amount: number;
@@ -36,11 +36,13 @@ function LikeButton({ amount, postId, hasLikedProp }: LikeButtonProps) {
   };
   return (
     <Button
-      className='flex items-center gap-3 border border-foreground'
+      className={`text-muted-foreground border border-foreground flex items-center gap-2 ${
+        hasLiked ? 'text-red-500 hover:text-red-600' : 'hover:text-red-500'
+      }`}
       variant='outline'
       onClick={handleLike}
     >
-      <Heart />
+      <Heart className={hasLiked ? 'fill-current' : ''} />
       {optimisticLikes}
     </Button>
   );

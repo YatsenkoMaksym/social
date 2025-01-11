@@ -1,20 +1,30 @@
 'use client';
 
-import React from 'react';
+import { useState } from 'react';
 import { Button } from '../ui/button';
-import { Delete } from 'lucide-react';
 import { deletePost } from '@/actions/post';
+import DeleteAlertDialog from '../DeleteAlertDialog';
 interface postId {
   postId: string;
 }
 function DeleteButton({ postId }: postId) {
+  const [isDeleting, setIsDeleting] = useState(false);
   const handleDelete = async () => {
-    await deletePost(postId);
+    if (isDeleting) return;
+    try {
+      setIsDeleting(true);
+      await deletePost(postId);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log('ERROR IN DELETING POST (frontend):', error.stack);
+      }
+    } finally {
+      setIsDeleting(false);
+    }
   };
   return (
-    <Button onClick={handleDelete}>
-      Pseudo Delete
-      <Delete />
+    <Button onClick={handleDelete} asChild>
+      <DeleteAlertDialog isDeleting={isDeleting} onDelete={handleDelete} />
     </Button>
   );
 }

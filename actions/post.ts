@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { currentUser } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
 import { Prisma } from '@prisma/client';
+import { getUserId } from './user';
 
 // Define the type for the getPosts query
 export type GetPostsType = Prisma.PromiseReturnType<typeof getPosts>;
@@ -38,6 +39,15 @@ export async function createPost({
 
 export async function deletePost(postId: string) {
   try {
+    const userId = await getUserId();
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+      select: { authorId: true },
+    });
+    if (!post) throw new Error('Post not found');
+    if (post.authorId !== userId)
+      throw new Error('You are not permited to delete this post');
+
     await prisma.post.delete({
       where: {
         id: postId,
@@ -60,6 +70,7 @@ export async function getPosts() {
       include: {
         author: {
           select: {
+            id: true,
             name: true,
             image: true,
             username: true,
