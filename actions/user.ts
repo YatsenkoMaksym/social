@@ -51,7 +51,7 @@ export async function userFromClerk(clerkId: string) {
   });
 }
 
-export async function getUserIdFromDB() {
+export async function getUserId() {
   const { userId: clerkId } = await auth();
   if (!clerkId) return null;
   const user = await prisma.user.findUnique({
@@ -69,7 +69,7 @@ export async function getUserIdFromDB() {
 
 export async function getRandomUsers(amount: number) {
   try {
-    const userId = await getUserIdFromDB();
+    const userId = await getUserId();
     if (!userId) return [];
     const users = await prisma.user.findMany({
       where: {
@@ -110,7 +110,7 @@ export async function getRandomUsers(amount: number) {
 
 export async function toggleFollow(personToFollow: string) {
   try {
-    const userId = await getUserIdFromDB();
+    const userId = await getUserId();
     if (!userId) return null;
     if (userId === personToFollow) throw new Error("Can't follow yourself");
 

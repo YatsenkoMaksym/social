@@ -8,35 +8,6 @@ import { getUserId } from './user';
 
 // Define the type for the getPosts query
 export type GetPostsType = Prisma.PromiseReturnType<typeof getPosts>;
-
-export async function createPost({
-  content,
-  imageUrl,
-}: {
-  content: string;
-  imageUrl: string;
-}): Promise<ReturnType<typeof prisma.post.create> | null> {
-  const user = await currentUser();
-  if (!user) return null;
-
-  const dbUser = await prisma.user.findUnique({
-    where: {
-      clerkId: user.id,
-    },
-  });
-  if (!dbUser) throw new Error('User was not found in the DB!');
-
-  const post = await prisma.post.create({
-    data: {
-      authorId: dbUser.id,
-      content,
-      image: imageUrl,
-    },
-  });
-  revalidatePath('/');
-  return post;
-}
-
 export async function deletePost(postId: string) {
   try {
     const userId = await getUserId();
@@ -112,4 +83,32 @@ export async function getPosts() {
     }
     return [];
   }
+}
+
+export async function createPost({
+  content,
+  imageUrl,
+}: {
+  content: string;
+  imageUrl: string;
+}): Promise<ReturnType<typeof prisma.post.create> | null> {
+  const user = await currentUser();
+  if (!user) return null;
+
+  const dbUser = await prisma.user.findUnique({
+    where: {
+      clerkId: user.id,
+    },
+  });
+  if (!dbUser) throw new Error('User was not found in the DB!');
+
+  const post = await prisma.post.create({
+    data: {
+      authorId: dbUser.id,
+      content,
+      image: imageUrl,
+    },
+  });
+  revalidatePath('/');
+  return post;
 }

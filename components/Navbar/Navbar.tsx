@@ -10,7 +10,7 @@ async function Navbar() {
   if (clerkUser) syncClerkWithDB(clerkUser);
 
   return (
-    <header className='sticky top-10'>
+    <header className='sticky top-10 mb-10'>
       <nav className='gap-4 flex flex-row px-6 items-center p-5 '>
         <div className='mr-auto'>
           <Link href='/' className='flex items-center gap-3'>
