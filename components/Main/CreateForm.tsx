@@ -5,6 +5,7 @@ import { Button } from '../ui/button';
 import { ImageIcon, PodcastIcon } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
 import { createPost } from '@/actions/post';
+import ImageUpload from './ImageUpload';
 
 function CreateForm() {
   const { user } = useUser();
@@ -45,7 +46,20 @@ function CreateForm() {
           className='min-h-[4rem] w-full text-foreground p-5 rounded-2xl max-h-[300px] h-[200px] bg-primary-foreground'
         />
       </div>
-
+      {(showImageUpload || imageUrl) && (
+        <div className='border rounded-2xl p-4'>
+          <ImageUpload
+            endpoint='postImage'
+            value={imageUrl}
+            onChange={(url) => {
+              setImageUrl(url);
+              if (!url) {
+                setShowImageUpload(false);
+              }
+            }}
+          />
+        </div>
+      )}
       <div className='flex justify-around '>
         <Button
           type='button'

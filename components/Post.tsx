@@ -49,7 +49,7 @@ function Post({ post, dbUserId }: PostProps) {
         {post.content}
         {post.image && (
           <span>
-            <Image
+            <img
               width={80}
               height={80}
               className='w-full h-full'
